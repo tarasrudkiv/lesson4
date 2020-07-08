@@ -1,0 +1,10 @@
+<div>
+  <div>{{user.id}}</div>
+  <div>{{user.name}}</div>
+  <div>{{user.username}}</div>
+  <div>{{user.email}}</div>
+  <div>{{user.addres}}</div>
+  <button (click)="AllPostsToLog(user.id)" >Console log Posts</button>
+  <button (click)="PostsAndCommentsToLog(user.id)" >Console log Posts And Comments</button>
+  <button ><a routerLink="/posts/{{user.id}}">Show post of this user</a> </button>
+</div>

@@ -1,0 +1,8 @@
+<div>
+  <div>{{post.id}}</div>
+  <div>{{post.userId}}</div>
+  <div>{{post.title}}</div>
+  <div>{{post.body}}</div>
+  <button (click)="AllCommentsToLog(post.id)">Console log Comments</button>
+  <button ><a routerLink="/comments/{{post.id}}">Show comments of this post</a> </button>
+</div>
