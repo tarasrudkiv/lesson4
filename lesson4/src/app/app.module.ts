@@ -5,17 +5,44 @@ import {AppComponent} from './components/app/app.component';
 import {UsersComponent} from './components/users/users.component';
 import {PostsComponent} from './components/posts/posts.component';
 import {CommentsComponent} from './components/comments/comments.component';
+import {HttpClientModule} from '@angular/common/http';
+import {UserService} from './service/user/user.service';
+import {PostService} from './service/post/post.service';
+import {CommentsService} from './service/comments/comments.service';
+import {RouterModule, Routes} from '@angular/router';
 import {AllUsersComponent} from './components/all-users/all-users.component';
 import {AllPostsComponent} from './components/all-posts/all-posts.component';
 import {AllCommentsComponent} from './components/all-comments/all-comments.component';
-import {HttpClientModule} from '@angular/common/http';
-import {Route, RouterModule, Routes} from '@angular/router';
-import {PostService} from './service/post/post.service';
-import {UserService} from './service/user/user.service';
-import {CommentService} from './service/comment/comment.service';
+import {UserResolverService} from './service/user/user-resolver.service';
+import {PostResolverService} from './service/post/post-resolver.service';
+import {CommentResolverService} from './service/comments/comment-resolver.service';
+import {SingleUserComponent} from './components/single-user/single-user.component';
+import {NextRouteService} from './service/next-route.service';
 
-const route: Routes = [
-  {path: 'ShowComments', component: AllCommentsComponent}
+const routes: Routes = [
+  {
+    path: 'users', component: AllUsersComponent, children: [
+      {path: ':id', component: SingleUserComponent},
+      {path: 'posts/:id', component: AllPostsComponent},
+    ], resolve: {allUsers: UserResolverService}, canActivate: [
+      NextRouteService
+    ]
+  },
+  {
+    path: 'posts', component: AllPostsComponent, children: [
+      {path: 'comments/:id', component: AllCommentsComponent}
+    ], resolve: {allPosts: PostResolverService}, canActivate: [
+      NextRouteService
+    ]
+  },
+  {
+    path: 'ShowAllComments', component: AllCommentsComponent, resolve: {allComments: CommentResolverService},
+    canActivate: [
+      NextRouteService
+    ]
+  },
+  {path: 'posts/:id', component: AllPostsComponent},
+  {path: 'comments/:id', component: AllCommentsComponent}
 ];
 
 @NgModule({
@@ -26,18 +53,15 @@ const route: Routes = [
     CommentsComponent,
     AllUsersComponent,
     AllPostsComponent,
-    AllCommentsComponent
+    AllCommentsComponent,
+    SingleUserComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    RouterModule.forRoot(route)
+    RouterModule.forRoot(routes)
   ],
-  providers: [
-    PostService,
-    UserService,
-    CommentService
-  ],
+  providers: [UserService, PostService, CommentsService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
